@@ -15,17 +15,24 @@ namespace todoleaf
             database = new SQLiteAsyncConnection(dbPath);
             database.CreateTableAsync<TodoItem>().Wait();
         }
-        public Task<List<TodoItem>> GetItemsAsync()
+        public Task<List<TodoItem>> GetItemsAsync(string name)
         {
-            return database.Table<TodoItem>().ToListAsync();
+            return database.QueryAsync<TodoItem>("SELECT * FROM [TodoItem] WHERE [Name] = '" + name + "'");
         }
-        public Task<int> SaveItemAsync(TodoItem item)
+        public Task<int> SaveItemAsync(TodoItem saveItem)
         {
-            return database.InsertAsync(item);
+            foreach(TodoItem item in GetItemsAsync(saveItem.Name).Result)
+            {
+                if (item.ID == saveItem.ID)
+                {
+                    return database.UpdateAsync(saveItem);
+                }
+            }
+            return database.InsertAsync(saveItem);
         }
         public Task<List<TodoItem>> DeleteAllAsync()
         {
-            return database.QueryAsync<TodoItem>("DELETE * FROM [TodoItem]");
+            return database.QueryAsync<TodoItem>("DELETE FROM [TodoItem]");
         }
     }
 }

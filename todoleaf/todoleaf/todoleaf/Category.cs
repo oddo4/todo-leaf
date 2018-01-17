@@ -8,7 +8,7 @@ namespace todoleaf
     public class Category
     {
         public string Name { get; set; }
-        //public ImageSource Icon { get; set; }
+        //public string TickIcon { get; set; }
 
         public Category()
         {
@@ -17,5 +17,6 @@ namespace todoleaf
         {
             this.Name = name;
         }
+
     }
 }

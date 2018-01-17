@@ -14,8 +14,10 @@ namespace todoleaf
         public MainPage()
 		{
 			InitializeComponent();
-            Category cat = new Category("Kat 1");
-            listCategory.Add(cat);
+            Category cat1 = new Category("Kat 1");
+            Category cat2 = new Category("Kat 2");
+            listCategory.Add(cat1);
+            listCategory.Add(cat2);
 
             listViewCategories.ItemsSource = listCategory;
 		}
@@ -23,6 +25,7 @@ namespace todoleaf
         {
             var selected = (Category)listViewCategories.SelectedItem;
             TaskPage taskPage = new TaskPage(selected.Name);
+            listViewCategories.SelectedItem = null;
             Navigation.PushAsync(taskPage);
         }
         private void EditCat_Clicked(object sender, EventArgs e)

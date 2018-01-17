@@ -12,11 +12,17 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="Start" VerticalOptions="Center" Padding="10,10,10,10">
-                            <Frame BackgroundColor="Transparent" Padding="0,0,0,0" VerticalOptions="Center" CornerRadius="0" HasShadow="False">
-                                <Label Text="{Binding Name}" FontSize="Medium" FontAttributes="None" HorizontalOptions="Start"/>
-                            </Frame>
-                        </StackLayout>
+                        <Grid HorizontalOptions="Start" VerticalOptions="Center" Padding="10,10,10,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding Name}" FontSize="Medium" FontAttributes="None" HorizontalOptions="Start"/>
+                            <Image Source="tick1.png" HeightRequest="20" WidthRequest="20" Grid.Row="0" Grid.Column="1" HorizontalOptions="End" IsVisible="False"/>
+                        </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
