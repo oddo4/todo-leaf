@@ -13,25 +13,36 @@ namespace todoleaf
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TaskPage : ContentPage
 	{
+        ObservableCollection<Category> listCategory = new ObservableCollection<Category>();
         ObservableCollection<TodoItem> listTasks = new ObservableCollection<TodoItem>();
+        ObservableCollection<TodoItem> allTasks = new ObservableCollection<TodoItem>();
+        TodoItem selectItem = new TodoItem();
         public TaskPage()
 		{
 			InitializeComponent();
-            TodoItem item = new TodoItem();
-            listTasks.Add(item);
-
-            listViewTasks.ItemsSource = listTasks;
         }
-        public TaskPage(string title)
+        public TaskPage(string title, ObservableCollection<Category> listCat)
         {
             InitializeComponent();
             this.Title = title;
-
-            TodoItem task = new TodoItem("Kat 1", "Ahoj Svete 1", 0);
+            this.listCategory = listCat;
+            TodoItem task = new TodoItem("Kat 2", "Ahoj Svete 4", 0);
             //App.Database.SaveItemAsync(task);
             //App.Database.DeleteAllAsync();
 
-            foreach(TodoItem item in App.Database.GetItemsAsync(title).Result)
+            //allTasksList();
+
+            MessagingCenter.Subscribe<TaskPage, string>(this, "UpdateList", (sender, arg) => {
+                listTasks = new ObservableCollection<TodoItem>();
+                foreach (TodoItem item in App.Database.GetItemsAsync(arg).Result)
+                {
+                    item.SetTickIcon();
+                    listTasks.Add(item);
+                }
+                listViewTasks.ItemsSource = listTasks;
+            });
+
+            foreach (TodoItem item in App.Database.GetItemsAsync(title).Result)
             {
                 item.SetTickIcon();
                 listTasks.Add(item);
@@ -41,11 +52,14 @@ namespace todoleaf
         }
         private void SelectedTask(object sender, ItemTappedEventArgs e)
         {
-            listViewTasks.SelectedItem = null;
+            var task = (TodoItem)listViewTasks.SelectedItem;
+            EditTask editTask = new EditTask(listTasks, listCategory, task, this);
+            //listViewTasks.SelectedItem = null;
+            Navigation.PushAsync(editTask);
         }
-        private void EditTask_Clicked(object sender, EventArgs e)
+        private void AddTask_Clicked(object sender, EventArgs e)
         {
-            EditTask editTask = new EditTask(listTasks);
+            EditTask editTask = new EditTask(listTasks, listCategory, new TodoItem(this.Title, "", 0), this);
 
             Navigation.PushAsync(editTask);
         }
@@ -85,15 +99,12 @@ namespace todoleaf
 
             App.Database.SaveItemAsync(saveItem);
         }
-        public void EditTask(object sender, EventArgs e)
+        /*private void allTasksList()
         {
-            var mi = ((MenuItem)sender);
-            DisplayAlert("More Context Action", mi.CommandParameter + " more context action", "OK");
-        }
-        public void DeleteTask(object sender, EventArgs e)
-        {
-            var mi = ((MenuItem)sender);
-            DisplayAlert("Delete Context Action", mi.CommandParameter + " delete context action", "OK");
-        }
+            foreach (TodoItem item in App.Database.GetAllAsync().Result)
+            {
+                allTasks.Add();
+            }
+        }*/
     }
 }

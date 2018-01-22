@@ -19,9 +19,13 @@ namespace todoleaf
         {
             return database.QueryAsync<TodoItem>("SELECT * FROM [TodoItem] WHERE [Name] = '" + name + "'");
         }
+        public Task<List<TodoItem>> GetAllAsync()
+        {
+            return database.Table<TodoItem>().ToListAsync();
+        }
         public Task<int> SaveItemAsync(TodoItem saveItem)
         {
-            foreach(TodoItem item in GetItemsAsync(saveItem.Name).Result)
+            foreach (TodoItem item in GetItemsAsync(saveItem.Name).Result)
             {
                 if (item.ID == saveItem.ID)
                 {
@@ -29,6 +33,10 @@ namespace todoleaf
                 }
             }
             return database.InsertAsync(saveItem);
+        }
+        public Task<List<TodoItem>> DeleteItemAsync(TodoItem saveItem)
+        {
+            return database.QueryAsync<TodoItem>("DELETE FROM [TodoItem] WHERE [ID] = '" + saveItem.ID + "'");
         }
         public Task<List<TodoItem>> DeleteAllAsync()
         {
