@@ -14,25 +14,35 @@ namespace todoleaf
 	public partial class EditCategories : ContentPage
 	{
         ObservableCollection<Category> listCategory = new ObservableCollection<Category>();
-        Category category = new Category();
         public EditCategories()
         {
             InitializeComponent();
         }
-        public EditCategories(ObservableCollection<Category> listCat, Category cat)
+        public EditCategories(ObservableCollection<Category> listCat)
         {
             InitializeComponent();
-            category = cat;
             listCategory = listCat;
-            entText.Text = category.Name;
-        }
-        private void SaveCategory_Clicked(object sender, EventArgs e)
-        {
+            MessagingCenter.Subscribe<EditCategories>(this, "UpdateList", (sender) => {
+                listCategory = new ObservableCollection<Category>();
 
-        }
-        private void DeleteCategory_Clicked(object sender, EventArgs e)
-        {
+                foreach (Category item in App.DatabaseCategories.GetAllAsync().Result)
+                {
+                    listCategory.Add(item);
+                }
 
+                listViewCategories.ItemsSource = listCategory;
+            });
+            listViewCategories.ItemsSource = listCategory;
+        }
+        private void SelectedCategory(object sender, ItemTappedEventArgs e)
+        {
+            EditCategory editCat = new EditCategory(listCategory, (Category)listViewCategories.SelectedItem, this);
+            Navigation.PushAsync(editCat);
+        }
+        private void AddCat_Clicked(object sender, EventArgs e)
+        {
+            EditCategory editCat = new EditCategory(listCategory, new Category(""), this);
+            Navigation.PushAsync(editCat);
         }
 
     }

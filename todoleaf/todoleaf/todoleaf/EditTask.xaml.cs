@@ -46,15 +46,19 @@ namespace todoleaf
         }*/
         private void SaveTask_Clicked(object sender, EventArgs e)
         {
-            App.Database.DeleteItemAsync(task);
-            task = new TodoItem((string)pkrCategories.SelectedItem, entText.Text, 0);
-            App.Database.SaveItemAsync(task);
+            if (task.Name != (string)pkrCategories.SelectedItem)
+            {
+                App.DatabaseTasks.DeleteItemAsync(task);
+            }
+            task.Name = (string)pkrCategories.SelectedItem;
+            task.Text = entText.Text;
+            App.DatabaseTasks.SaveItemAsync(task);
             MessagingCenter.Send(TaskPage, "UpdateList", task.Name);
             Navigation.PopAsync();
         }
         private void DeleteTask_Clicked(object sender, EventArgs e)
         {
-            App.Database.DeleteItemAsync(task);
+            App.DatabaseTasks.DeleteItemAsync(task);
             TaskPage taskPage = new TaskPage(task.Name, listCat);
             MessagingCenter.Send(TaskPage, "UpdateList", task.Name);
             Navigation.PopAsync();

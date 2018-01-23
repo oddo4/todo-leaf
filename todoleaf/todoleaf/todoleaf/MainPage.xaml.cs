@@ -19,25 +19,24 @@ namespace todoleaf
             listCategory.Add(cat1);
             listCategory.Add(cat2);*/
 
-            var result = App.Database.GetAllAsync().Result;
-            List<string> listString = new List<string>();
-
-            foreach (TodoItem item in result)
+            foreach (Category item in App.DatabaseCategories.GetAllAsync().Result)
             {
-                if(!listString.Contains(item.Name))
+                listCategory.Add(item);
+            }
+
+            MessagingCenter.Subscribe<MainPage>(this, "UpdateList", (sender) => {
+                listCategory = new ObservableCollection<Category>();
+
+                foreach (Category item in App.DatabaseCategories.GetAllAsync().Result)
                 {
-                    listString.Add(item.Name);
-                }                
-            }
+                    listCategory.Add(item);
+                }
 
-            foreach (string str in listString)
-            {
-                Category newCat = new Category(str);
-                listCategory.Add(newCat);
-            }
+                listViewCategories.ItemsSource = listCategory;
+            });
 
             listViewCategories.ItemsSource = listCategory;
-		}
+        }
         private void SelectedCategory(object sender, ItemTappedEventArgs e)
         {
             var selected = (Category)listViewCategories.SelectedItem;
@@ -47,12 +46,13 @@ namespace todoleaf
         }
         private void EditCat_Clicked(object sender, EventArgs e)
         {
-            MenuItem menuItem = (MenuItem)sender;
-            var item = listViewCategories.SelectedItem;
+            EditCategories editCategories = new EditCategories(listCategory);
+            Navigation.PushAsync(editCategories);
         }
-        private void DeleteCat_Clicked(object sender, EventArgs e)
+        private void AddCat_Clicked(object sender, EventArgs e)
         {
-            
+            EditCategory editCat = new EditCategory(listCategory, new Category(""), this);
+            Navigation.PushAsync(editCat);
         }
     }
 }

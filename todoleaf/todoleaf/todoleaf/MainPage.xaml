@@ -4,15 +4,15 @@
              xmlns:local="clr-namespace:todoleaf"
              x:Class="todoleaf.MainPage"
              Title="Categories">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Order="Secondary" Text="Add Category" Priority="1" Clicked="AddCat_Clicked"/>
+        <ToolbarItem Order="Secondary" Text="Edit Categories" Priority="1" Clicked="EditCat_Clicked"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ListView x:Name="listViewCategories" HasUnevenRows="True" ItemTapped="SelectedCategory" BackgroundColor="White" SeparatorColor="#00A6FF">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <ViewCell.ContextActions>
-                            <MenuItem Clicked="EditCat_Clicked" CommandParameter="{Binding .}" Text="Edit"/>
-                            <MenuItem Clicked="DeleteCat_Clicked" CommandParameter="{Binding .}" Text="Delete" IsDestructive="True"/>
-                        </ViewCell.ContextActions>
                         <Grid HorizontalOptions="Start" VerticalOptions="Center" Padding="10,10,10,10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>

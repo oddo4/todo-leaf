@@ -9,17 +9,29 @@ namespace todoleaf
 {
 	public partial class App : Application
 	{
-        static TodoItemDatabase database;
+        static TodoItemDatabase databaseTasks;
+        static CategoryDatabase databaseCategories;
 
-        public static TodoItemDatabase Database
+        public static TodoItemDatabase DatabaseTasks
         {
             get
             {
-                if (database == null)
+                if (databaseTasks == null)
                 {
-                    database = new TodoItemDatabase(DependencyService.Get<IFileHelper>().GetLocalFilePath("TodoListData111.db3"));
+                    databaseTasks = new TodoItemDatabase(DependencyService.Get<IFileHelper>().GetLocalFilePath("TasksDB.db3"));
                 }
-                return database;
+                return databaseTasks;
+            }
+        }
+        public static CategoryDatabase DatabaseCategories
+        {
+            get
+            {
+                if (databaseCategories == null)
+                {
+                    databaseCategories = new CategoryDatabase(DependencyService.Get<IFileHelper>().GetLocalFilePath("CategoryDB.db3"));
+                }
+                return databaseCategories;
             }
         }
 

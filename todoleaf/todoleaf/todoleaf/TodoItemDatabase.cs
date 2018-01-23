@@ -34,9 +34,17 @@ namespace todoleaf
             }
             return database.InsertAsync(saveItem);
         }
+        public Task<List<TodoItem>> RenameCategoryAsync(string newCat, string cat)
+        {
+            return database.QueryAsync<TodoItem>("UPDATE [TodoItem] SET [Name] = '" + newCat + "' WHERE [Name] = '" + cat + "'");
+        }
         public Task<List<TodoItem>> DeleteItemAsync(TodoItem saveItem)
         {
             return database.QueryAsync<TodoItem>("DELETE FROM [TodoItem] WHERE [ID] = '" + saveItem.ID + "'");
+        }
+        public Task<List<TodoItem>> DeleteCategoryAsync(string category)
+        {
+            return database.QueryAsync<TodoItem>("DELETE FROM [TodoItem] WHERE [Name] = '" + category + "'");
         }
         public Task<List<TodoItem>> DeleteAllAsync()
         {

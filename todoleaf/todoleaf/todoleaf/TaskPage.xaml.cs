@@ -34,7 +34,8 @@ namespace todoleaf
 
             MessagingCenter.Subscribe<TaskPage, string>(this, "UpdateList", (sender, arg) => {
                 listTasks = new ObservableCollection<TodoItem>();
-                foreach (TodoItem item in App.Database.GetItemsAsync(arg).Result)
+                this.Title = arg;
+                foreach (TodoItem item in App.DatabaseTasks.GetItemsAsync(arg).Result)
                 {
                     item.SetTickIcon();
                     listTasks.Add(item);
@@ -42,7 +43,7 @@ namespace todoleaf
                 listViewTasks.ItemsSource = listTasks;
             });
 
-            foreach (TodoItem item in App.Database.GetItemsAsync(title).Result)
+            foreach (TodoItem item in App.DatabaseTasks.GetItemsAsync(title).Result)
             {
                 item.SetTickIcon();
                 listTasks.Add(item);
@@ -97,7 +98,7 @@ namespace todoleaf
                     break;
             }
 
-            App.Database.SaveItemAsync(saveItem);
+            App.DatabaseTasks.SaveItemAsync(saveItem);
         }
         /*private void allTasksList()
         {
