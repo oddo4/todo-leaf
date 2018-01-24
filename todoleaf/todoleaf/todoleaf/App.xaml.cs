@@ -9,6 +9,7 @@ namespace todoleaf
 {
 	public partial class App : Application
 	{
+        public static bool Query = true;
         static TodoItemDatabase databaseTasks;
         static CategoryDatabase databaseCategories;
 

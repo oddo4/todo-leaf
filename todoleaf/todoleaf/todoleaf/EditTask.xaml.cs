@@ -13,7 +13,6 @@ namespace todoleaf
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class EditTask : ContentPage
 	{
-        TaskPage TaskPage;
         ObservableCollection<TodoItem> listTasks = new ObservableCollection<TodoItem>();
         ObservableCollection<Category> listCat = new ObservableCollection<Category>();
         List<string> listCategory = new List<string>();
@@ -22,13 +21,12 @@ namespace todoleaf
         {
             InitializeComponent();
         }
-        public EditTask(ObservableCollection<TodoItem> listTasks, ObservableCollection<Category> listCat, TodoItem task, TaskPage taskPage = null)
+        public EditTask(ObservableCollection<TodoItem> listTasks, ObservableCollection<Category> listCat, TodoItem task)
         {
             InitializeComponent();
             this.task = task;
             this.listCat = listCat;
             this.listTasks = listTasks;
-            TaskPage = taskPage;
             foreach (Category cat in listCat)
             {
                 if(!listCategory.Contains(cat.Name))
@@ -53,14 +51,14 @@ namespace todoleaf
             task.Name = (string)pkrCategories.SelectedItem;
             task.Text = entText.Text;
             App.DatabaseTasks.SaveItemAsync(task);
-            MessagingCenter.Send(TaskPage, "UpdateList", task.Name);
+            App.Query = true;
             Navigation.PopAsync();
         }
         private void DeleteTask_Clicked(object sender, EventArgs e)
         {
             App.DatabaseTasks.DeleteItemAsync(task);
             TaskPage taskPage = new TaskPage(task.Name, listCat);
-            MessagingCenter.Send(TaskPage, "UpdateList", task.Name);
+            App.Query = true;
             Navigation.PopAsync();
         }
     }

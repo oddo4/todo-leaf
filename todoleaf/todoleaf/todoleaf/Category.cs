@@ -10,13 +10,15 @@ namespace todoleaf
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
         public string Name { get; set; }
+        public bool Sort { get; set; }
         public Category()
         {
 
         }
-        public Category(string name)
+        public Category(string name, bool sort = true)
         {
             this.Name = name;
+            this.Sort = sort;
         }
     }
 }

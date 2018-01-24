@@ -15,36 +15,25 @@ namespace todoleaf
 	{
         ObservableCollection<Category> listCategory = new ObservableCollection<Category>();
         Category category = new Category();
-        MainPage MainPage = null;
-        EditCategories EditCategories = null;
         public EditCategory()
         {
             InitializeComponent();
         }
-        public EditCategory(ObservableCollection<Category> listCat, Category cat, MainPage mainPage = null)
+        public EditCategory(ObservableCollection<Category> listCat, Category cat)
         {
             InitializeComponent();
             category = cat;
-            MainPage = mainPage;
-            listCategory = listCat;
-            entText.Text = category.Name;
-        }
-        public EditCategory(ObservableCollection<Category> listCat, Category cat, EditCategories editCategories = null)
-        {
-            InitializeComponent();
-            category = cat;
-            EditCategories = editCategories;
             listCategory = listCat;
             entText.Text = category.Name;
         }
         private void SaveCategory_Clicked(object sender, EventArgs e)
         {
             //App.DatabaseCategories.DeleteItemAsync(category);
-            Category newCat = new Category(entText.Text);
+            App.DatabaseTasks.RenameCategoryAsync(entText.Text, category.Name);
+            Category newCat = category;
+            newCat.Name = entText.Text;
             App.DatabaseCategories.SaveItemAsync(newCat);
-            App.DatabaseTasks.RenameCategoryAsync(newCat.Name, category.Name);
-            MessageCenter();
-            
+            App.Query = true;
             Navigation.PopAsync();
             
         }
@@ -52,19 +41,8 @@ namespace todoleaf
         {
             App.DatabaseCategories.DeleteItemAsync(category);
             App.DatabaseTasks.DeleteCategoryAsync(category.Name);
-            MessageCenter();
+            App.Query = true;
             Navigation.PopAsync();
-        }
-        private void MessageCenter()
-        {
-            if (MainPage != null)
-            {
-                MessagingCenter.Send(MainPage, "UpdateList");
-            }
-            else if (EditCategories != null)
-            {
-                MessagingCenter.Send(EditCategories, "UpdateList");
-            }
         }
     }
 }

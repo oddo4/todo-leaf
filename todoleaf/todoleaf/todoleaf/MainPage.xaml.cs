@@ -11,37 +11,28 @@ namespace todoleaf
 	public partial class MainPage : ContentPage
 	{
         ObservableCollection<Category> listCategory = new ObservableCollection<Category>();
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            QueryList(App.Query);
+        }
         public MainPage()
 		{
 			InitializeComponent();
-            /*Category cat1 = new Category("Kat 1");
-            Category cat2 = new Category("Kat 2");
-            listCategory.Add(cat1);
-            listCategory.Add(cat2);*/
+            CreateUnsortedCat();
+        }
+        private void CreateUnsortedCat()
+        {
+            Category unsort = new Category("Unsorted tasks", true);
 
-            foreach (Category item in App.DatabaseCategories.GetAllAsync().Result)
-            {
-                listCategory.Add(item);
-            }
-
-            MessagingCenter.Subscribe<MainPage>(this, "UpdateList", (sender) => {
-                listCategory = new ObservableCollection<Category>();
-
-                foreach (Category item in App.DatabaseCategories.GetAllAsync().Result)
-                {
-                    listCategory.Add(item);
-                }
-
-                listViewCategories.ItemsSource = listCategory;
-            });
-
-            listViewCategories.ItemsSource = listCategory;
         }
         private void SelectedCategory(object sender, ItemTappedEventArgs e)
         {
             var selected = (Category)listViewCategories.SelectedItem;
             TaskPage taskPage = new TaskPage(selected.Name, listCategory);
             listViewCategories.SelectedItem = null;
+            App.Query = true;
             Navigation.PushAsync(taskPage);
         }
         private void EditCat_Clicked(object sender, EventArgs e)
@@ -51,8 +42,22 @@ namespace todoleaf
         }
         private void AddCat_Clicked(object sender, EventArgs e)
         {
-            EditCategory editCat = new EditCategory(listCategory, new Category(""), this);
+            EditCategory editCat = new EditCategory(listCategory, new Category(""));
             Navigation.PushAsync(editCat);
+        }
+        private void QueryList(bool query)
+        {
+            if(query)
+            {
+                listCategory = new ObservableCollection<Category>();
+
+                foreach (Category item in App.DatabaseCategories.GetAllAsync().Result)
+                {
+                    listCategory.Add(item);
+                }
+                listViewCategories.ItemsSource = listCategory;
+                App.Query = false;
+            }
         }
     }
 }
