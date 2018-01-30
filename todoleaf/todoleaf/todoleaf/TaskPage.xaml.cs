@@ -65,6 +65,7 @@ namespace todoleaf
                         {
                             saveItem = item;
                             saveItem.Done = 1;
+                            saveItem.SetTickIcon();
                         }
                     }
                     break;
@@ -76,6 +77,7 @@ namespace todoleaf
                         {
                             saveItem = item;
                             saveItem.Done = 0;
+                            saveItem.SetTickIcon();
                         }
                     }
                     break;
